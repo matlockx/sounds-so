@@ -76,7 +76,8 @@ def sounds_like():
     response = first(r._asdict() for r in sounds) or None
 
     if response:
-        return SlackResult(response['url'])._asdict()
+        return SlackResult(
+            """<video controls="" autoplay="" name="media"><source src="{}" type="audio/mpeg"></video>""".format(response['url']))._asdict()
     else:
         return SlackResult("")._asdict()
 
