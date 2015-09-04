@@ -10,7 +10,7 @@ import requests
 # http://www.freesound.org/apiv2/search/text/?query=tiger&filter=duration:[3%20TO%2010]&fields=previews,images,license
 
 SearchResult = namedtuple("SearchResult", ["id", "name", "tags", "desc", "url", "image"])
-SlackResult = namedtuple("SlackResult", ["text"])
+SlackResult = namedtuple("SlackResult", ["text", "channel"])
 
 FREESOUND_API_TOKEN = os.getenv("FREESOUND_API_TOKEN")
 SLACK_TEAM_TOKEN = os.getenv("SLACK_TEAM_TOKEN")
@@ -20,8 +20,28 @@ assert FREESOUND_API_TOKEN
 assert SLACK_TEAM_TOKEN
 assert SLACK_INCOMING_WEBHOOK_URL
 
-
 FREESOUND_SEARCH_ENDPOINT = "http://www.freesound.org/apiv2/search/text/"
+SOUNDCLOUD_ENDPOINT = "http://api.soundcloud.com/tracks"
+
+
+def shuffled(values):
+    values = list(values)
+    random.shuffle(values)
+    return values
+
+
+def soundcloud_search(term):
+    response = requests.get(SOUNDCLOUD_ENDPOINT, params={
+        "q": term
+    })
+    for result in response.json():
+        id = result['id']
+        name = result['title']
+        tags = result['tag_list']
+        desc = result['description']
+        url = result['permalink_url']
+        image = result['waveform_url']
+        yield SearchResult(id, name, tags, desc, url, image)
 
 
 def freesound_search(term):
@@ -50,18 +70,12 @@ def freesound_search(term):
         yield SearchResult(id, name, tags, desc, url, image)
 
 
-def _sounds_like(term):
-    response = list(freesound_search(term))
-    random.shuffle(response)
-    return response
-
-
 # noinspection PyProtectedMember
 @bottle.get("/api/v1/random/sound")
 def sounds_like():
     bottle.response.set_header("Access-Control-Allow-Origin", "*")
 
-    sounds = _sounds_like(bottle.request.params.get('like', ''))
+    sounds = shuffled(freesound_search(bottle.request.params.get('like', '')))
     return first(r._asdict() for r in sounds) or {}
 
 
@@ -70,19 +84,28 @@ def sounds_like():
 def sounds_like():
     token = bottle.request.forms['token']
     if token != SLACK_TEAM_TOKEN:
-        bottle.abort(403, "slack token invalid")
+        bottle.abort(403, "slack token invalid {}".format(token))
 
-    trigger_word = bottle.request.forms['trigger_word']
-    text = bottle.request.forms['text']
-    term = text.replace(trigger_word, "")
+    term = bottle.request.forms['text']
 
-    sounds = _sounds_like(term)
-    response = first(r._asdict() for r in sounds) or None
+    channel = bottle.request.forms['channel_id']
+    freesounds = first(shuffled(freesound_search(term)))
+    soundcloud = first(shuffled(soundcloud_search(term)))
 
-    if response:
-        slack_response = SlackResult(
-            """<video controls="" autoplay="" name="media"><source src="{}" type="audio/mpeg"></video>""".format(response['url']))._asdict()
-        requests.post(SLACK_INCOMING_WEBHOOK_URL, slack_response)
+    if freesounds or soundcloud:
+        slack_response = {
+            "text": soundcloud.url if soundcloud else freesounds.url,
+            "channel": channel,
+            "unfurl_links": True,
+            "unfurl_media": True,
+            "attachments": [
+                {
+                    "title": "freesound: <{}|{}>".format(freesounds.url, freesounds.name)
+                }
+            ] if freesounds else []
+        }
+
+        requests.post(SLACK_INCOMING_WEBHOOK_URL, json=slack_response)
         return
     else:
         return "No audio found"
@@ -90,5 +113,5 @@ def sounds_like():
 
 @bottle.get("/api/v1/random/sound/redirect")
 def sounds_like_redirect():
-    response = _sounds_like(bottle.request.params.get('like', ''))
+    response = shuffled(freesound_search(bottle.request.params.get('like', '')))
     bottle.redirect(first(r.url for r in response) or bottle.abort(404))
