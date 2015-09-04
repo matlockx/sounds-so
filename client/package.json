@@ -1,0 +1,33 @@
+{
+  "name": "sounds-so-client",
+  "version": "0.0.0",
+  "description": "GUI for sounds-so",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/matlockx/sounds-so.git"
+  },
+  "keywords": [
+    "Sounds"
+  ],
+  "author": "Antonio Silva del Pozo <asilvadelpozo@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/matlockx/sounds-so/issues"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^2.3.1",
+    "gulp-cache": "^0.2.10",
+    "gulp-concat": "^2.6.0",
+    "gulp-imagemin": "^2.3.0",
+    "gulp-jshint": "^1.11.2",
+    "gulp-load-plugins": "^1.0.0-rc.1",
+    "gulp-minify-css": "^1.2.0",
+    "gulp-notify": "^2.2.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.0.3",
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-uglify": "^1.2.0",
+    "gulp-webserver": "^0.9.1"
+  }
+}

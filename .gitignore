@@ -58,3 +58,7 @@ target/
 .idea
 .iml
 sounds-so.iml
+
+# frontend
+client/node_modules
+client/bower_components
