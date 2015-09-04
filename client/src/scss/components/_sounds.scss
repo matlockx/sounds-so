@@ -1,16 +1,16 @@
 .sound {
   &__image {
-  margin: 1em;
-  width: 100%;
+    margin: 1em;
+    width: 100%;
 
-  // invert the image so it has black screen
-  -webkit-filter: invert(100%);
-  -moz-filter: invert(100%);
-  filter: invert(100%);
+    // invert the image so it has black screen
+    -webkit-filter: invert(100%) grayscale(100%) contrast(500%) opacity(30%);
+    -moz-filter: invert(100%) grayscale(100%) contrast(500%) opacity(30%);
+    filter: invert(100%) grayscale(100%) contrast(500%) opacity(30%);
   }
 
   &__controls {
-  margin: 1em;
+    margin: 1em;
   }
 }
 

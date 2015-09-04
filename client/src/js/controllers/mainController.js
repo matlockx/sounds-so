@@ -4,6 +4,7 @@
     $scope.search = $routeParams.query || "";
     $scope.sound = null;
     $scope.howl = null;
+    $scope.searching = false;
 
     function playSound(sound) {
       $scope.stop();
@@ -16,11 +17,16 @@
     }
 
     function performSearch() {
+      $scope.searching = true;
+      $scope.lastSearch = $scope.search;
+      
       Sound.get({like: $scope.search}, function(sound) {
+        $scope.searching = false;
+
         if(sound.url) {
           playSound(sound);
         } else {
-          $scope.no_result = true;
+          $scope.noResult = true;
         }
       });
     }
@@ -31,7 +37,12 @@
 
     $scope.searchSound = function () {
       $scope.stop();
-      $location.path("/" + $scope.search);
+
+      if($scope.search === $scope.lastSearch) {
+        performSearch();
+      } else {
+        $location.path("/" + $scope.search);
+      }
     };
 
     $scope.stop = function() {
@@ -41,7 +52,7 @@
     };
 
     // start a search if we have a query.
-    if($scope.search && $scope.search != "") {
+    if($scope.search && $scope.search !== "") {
       performSearch();
     }
   }]);

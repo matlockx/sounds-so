@@ -1,7 +1,7 @@
 <div class="row">
   <form class="col-xs-12">
     <div class="input-group">
-      <input type="text" class="form-control" placeholder="Sound..." data-ng-model="search">
+      <input type="text" class="form-control" placeholder="Sound..." data-ng-model="search" autofocus>
       <span class="input-group-addon">
         <button id="search" type="submit" class="glyphicon glyphicon-search" data-ng-click="searchSound()"></button>
       </span>
@@ -25,8 +25,11 @@
         </button>
       </div>
     </div>
-    <div data-ng-if="no_result">
+    <div data-ng-if="noResult">
       Nothing found.
+    </div>
+    <div data-ng-if="searching">
+      Searching...
     </div>
   </div>
 </div>
