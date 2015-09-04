@@ -1,0 +1,7 @@
+sso_backend_port: 81
+sso_backend_slack_team_token: change me
+sso_backend_freesound_api_token: change me
+
+sso_frontend_port: 80
+sso_frontend_backend_host: "{{ ansible_default_ipv4.address }}"
+sso_frontend_backend_address: "{{ sso_frontend_backend_host }}:{{sso_backend_port }}"

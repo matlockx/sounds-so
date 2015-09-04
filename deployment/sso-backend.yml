@@ -18,8 +18,8 @@
         restart_policy: always
 
         ports:
-          - '80:8080'
+          - '{{ sso_backend_port }}:8080'
 
         env:
-          FREESOUND_API_TOKEN: "{{ sso_freesound_api_token }}"
-          SLACK_TEAM_TOKEN: "{{ sso_slack_team_token }}"
+          FREESOUND_API_TOKEN: "{{ sso_backend_freesound_api_token }}"
+          SLACK_TEAM_TOKEN: "{{ sso_backend_slack_team_token }}"

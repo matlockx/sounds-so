@@ -1,0 +1,24 @@
+- hosts: all
+
+  tasks:
+    - name: Install pip
+      yum: name=python-pip
+
+    - name: Install docker python lib from pip
+      pip: name=docker-py==1.1.0
+
+    - name: Deploy sounds.so frontend
+      docker:
+        name: sounds-so-frontend
+        image: soundsso/sounds-so-frontend
+
+        state: reloaded
+        pull: always
+
+        restart_policy: always
+
+        ports:
+          - '{{ sso_frontend_port }}:80'
+
+        env:
+          BACKEND_HOST: "{{ sso_frontend_backend_address }}"
