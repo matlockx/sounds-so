@@ -36,5 +36,9 @@
             $scope.soundFile.stop();
         };
 
+        $scope.repeat = function() {
+            $scope.soundFile.loop(true);
+        };
+
     }]);
 })();

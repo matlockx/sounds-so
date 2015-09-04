@@ -3,6 +3,6 @@
 
     angular.module('app')
         .factory('Sound', ['$resource',function ($resource) {
-            return $resource('http://95.138.174.122/api/v1/random/sound');
+            return $resource('http://sounds.so/api/v1/random/sound');
         }]);
 })();

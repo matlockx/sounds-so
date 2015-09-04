@@ -1,12 +1,12 @@
 <div class="row">
-    <div class="col-xs-12">
+    <form class="col-xs-12">
         <div class="input-group">
             <input type="text" class="form-control" placeholder="Sound..." data-ng-model="search">
-                <span class="input-group-addon" data-ng-click="searchSound()">
-                    <i class="glyphicon glyphicon-search"></i>
-                </span>
+            <span class="input-group-addon">
+                <button id="search" type="submit" class="glyphicon glyphicon-search" data-ng-click="searchSound()"></button>
+            </span>
         </div>
-    </div>
+    </form>
     Sound: {{sound}}
 
     <div class="col-xs-12">
@@ -25,6 +25,9 @@
                 </button>
                 <button class="btn btn-primary" type="button" data-ng-click="stop()">
                     <i class="glyphicon glyphicon-stop"></i>
+                </button>
+                <button class="btn btn-primary" type="button" data-ng-click="repeat()">
+                    <i class="glyphicon glyphicon-repeat"></i>
                 </button>
             </div>
         </div>
