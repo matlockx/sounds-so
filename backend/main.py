@@ -14,6 +14,8 @@ SearchResult = namedtuple("SearchResult", ["id", "name", "tags", "desc", "url", 
 FREESOUND_API_TOKEN = os.getenv("FREESOUND_API_TOKEN")
 assert FREESOUND_API_TOKEN
 
+SLACK_TEAM_TOKEN = os.getenv("SLACK_TEAM_TOKEN")
+
 FREESOUND_SEARCH_ENDPOINT = "http://www.freesound.org/apiv2/search/text/"
 
 
@@ -55,6 +57,21 @@ def sounds_like():
     bottle.response.set_header("Access-Control-Allow-Origin", "*")
 
     sounds = _sounds_like(bottle.request.params.get('like', ''))
+    return first(r._asdict() for r in sounds) or {}
+
+
+# noinspection PyProtectedMember
+@bottle.post("/api/v1/slack/webhook")
+def sounds_like():
+
+    token = bottle.request.forms['tocken']
+    assert token == SLACK_TEAM_TOKEN
+
+    trigger_word = bottle.request.forms['trigger_word']
+    text = bottle.request.forms['text']
+    term = text.replace(trigger_word, "")
+
+    sounds = _sounds_like(term)
     return first(r._asdict() for r in sounds) or {}
 
 
