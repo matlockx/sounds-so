@@ -1,0 +1,24 @@
+- hosts: all
+
+  tasks:
+    - name: Install pip
+      yum: name=python-pip
+
+    - name: Install docker python lib from pip
+      pip: name=docker-py==1.1.0
+
+    - name: Deploy sounds.so backend
+      docker:
+        name: sounds-so-backend
+        image: matlockx/sounds-so-backend
+
+        state: reloaded
+        pull: always
+
+        restart_policy: always
+
+        ports:
+          - '80:8080'
+
+        env:
+          FREESOUND_API_TOKEN: "{{ sso_freesound_api_token }}"
