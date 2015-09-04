@@ -64,7 +64,7 @@ def sounds_like():
 @bottle.post("/api/v1/slack/webhook")
 def sounds_like():
 
-    token = bottle.request.forms['tocken']
+    token = bottle.request.forms['token']
     assert token == SLACK_TEAM_TOKEN
 
     trigger_word = bottle.request.forms['trigger_word']
