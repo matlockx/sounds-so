@@ -1,44 +1,48 @@
 (function() {
-    angular.module('app').controller('mainCtrl', ['$scope', 'Sound', function($scope, Sound) {
-        $scope.search = '';
-        $scope.sound = '';
+  angular.module('app').controller('mainCtrl', ['$scope', '$routeParams', '$location', 'Sound',
+  function($scope, $routeParams, $location, Sound) {
+    $scope.search = $routeParams.query || "";
+    $scope.sound = null;
+    $scope.howl = null;
 
-        $scope.soundFile = {};
+    function playSound(sound) {
+      $scope.stop();
+      $scope.sound = sound;
+      $scope.howl = new Howl({
+        urls: [sound.url],
+        autoplay: true,
+        loop: true
+      });
+    }
 
-        $scope.playing = false;
+    function performSearch() {
+      Sound.get({like: $scope.search}, function(sound) {
+        if(sound.url) {
+          playSound(sound);
+        } else {
+          $scope.no_result = true;
+        }
+      });
+    }
 
-        $scope.searchSound = function () {
-            Sound.get({like: $scope.search}, function(sound) {
-                $scope.sound = sound;
-                $scope.soundFile = new Howl({
-                    urls: [sound.url],
-                    onend: function() {
-                        $scope.playing = false;
-                    }
-                });
-            });
-        };
+    $scope.$on('$destroy', function () {
+      $scope.stop();
+    });
 
-        $scope.play = function() {
-            if(!$scope.playing) {
-                $scope.playing = true;
-                $scope.soundFile.play();
-            }
-        };
+    $scope.searchSound = function () {
+      $scope.stop();
+      $location.path("/" + $scope.search);
+    };
 
-        $scope.pause = function() {
-            $scope.playing = false;
-            $scope.soundFile.pause();
-        };
+    $scope.stop = function() {
+      if($scope.howl != null) {
+        $scope.howl.stop();
+      }
+    };
 
-        $scope.stop = function() {
-            $scope.playing = false;
-            $scope.soundFile.stop();
-        };
-
-        $scope.repeat = function() {
-            $scope.soundFile.loop(true);
-        };
-
-    }]);
+    // start a search if we have a query.
+    if($scope.search && $scope.search != "") {
+      performSearch();
+    }
+  }]);
 })();
