@@ -100,7 +100,15 @@ def sounds_like():
             "unfurl_media": True,
             "attachments": [
                 {
-                    "title": "freesound: <{}|{}>".format(freesounds.url, freesounds.name)
+                    "title": "From freesound.org",
+                    "fields": [
+                        {
+                            "title": freesounds.name,
+                            "value": freesounds.url,
+                            "short": True
+                        }
+                    ],
+                    "color": "#7CD197"
                 }
             ] if freesounds else []
         }
