@@ -13,9 +13,13 @@ SearchResult = namedtuple("SearchResult", ["id", "name", "tags", "desc", "url", 
 SlackResult = namedtuple("SlackResult", ["text"])
 
 FREESOUND_API_TOKEN = os.getenv("FREESOUND_API_TOKEN")
-assert FREESOUND_API_TOKEN
-
 SLACK_TEAM_TOKEN = os.getenv("SLACK_TEAM_TOKEN")
+SLACK_INCOMING_WEBHOOK_URL = os.getenv("SLACK_INCOMING_WEBHOOK_URL")
+
+assert FREESOUND_API_TOKEN
+assert SLACK_TEAM_TOKEN
+assert SLACK_INCOMING_WEBHOOK_URL
+
 
 FREESOUND_SEARCH_ENDPOINT = "http://www.freesound.org/apiv2/search/text/"
 
@@ -76,10 +80,12 @@ def sounds_like():
     response = first(r._asdict() for r in sounds) or None
 
     if response:
-        return SlackResult(
+        slack_response = SlackResult(
             """<video controls="" autoplay="" name="media"><source src="{}" type="audio/mpeg"></video>""".format(response['url']))._asdict()
+        requests.post(SLACK_INCOMING_WEBHOOK_URL, slack_response)
+        return
     else:
-        return SlackResult("")._asdict()
+        return "No audio found"
 
 
 @bottle.get("/api/v1/random/sound/redirect")
