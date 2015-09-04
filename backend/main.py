@@ -3,6 +3,7 @@ import os
 import random
 
 import bottle
+from first import first
 import requests
 
 
@@ -38,23 +39,22 @@ def freesound_search(term):
         yield SearchResult(url, image)
 
 
+def _sounds_like(term):
+    response = list(freesound_search(term))
+    random.shuffle(response)
+    return response
+
+
+# noinspection PyProtectedMember
 @bottle.get("/api/v1/random/sound")
 def sounds_like():
     bottle.response.set_header("Access-Control-Allow-Origin", "*")
 
-    term = bottle.request.params['like']
-    response = tuple(freesound_search(term))
-    if not response:
-        return {}
-    else:
-        # noinspection PyProtectedMember
-        return random.choice(response)._asdict()
-
-
+    sounds = _sounds_like(bottle.request.params.get('like', ''))
+    return first(r._asdict() for r in sounds) or {}
 
 
 @bottle.get("/api/v1/random/sound/redirect")
 def sounds_like_redirect():
-    response = sounds_like()
-    bottle.redirect(response['url'])
-
+    response = _sounds_like(bottle.request.params.get('like', ''))
+    bottle.redirect(first(r.url for r in response) or bottle.abort(404))
