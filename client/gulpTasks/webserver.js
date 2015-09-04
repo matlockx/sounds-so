@@ -6,7 +6,7 @@ module.exports = function (gulp, plugins) {
             .pipe(plugins.webserver({
                 livereload: true,
                 open: true,
-                fallback: 'src/index.html'
+                fallback: 'index.html'
             }));
     };
 
