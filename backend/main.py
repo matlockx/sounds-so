@@ -10,6 +10,7 @@ import requests
 # http://www.freesound.org/apiv2/search/text/?query=tiger&filter=duration:[3%20TO%2010]&fields=previews,images,license
 
 SearchResult = namedtuple("SearchResult", ["id", "name", "tags", "desc", "url", "image"])
+SlackResult = namedtuple("SlackResult", ["text"])
 
 FREESOUND_API_TOKEN = os.getenv("FREESOUND_API_TOKEN")
 assert FREESOUND_API_TOKEN
@@ -63,16 +64,21 @@ def sounds_like():
 # noinspection PyProtectedMember
 @bottle.post("/api/v1/slack/webhook")
 def sounds_like():
-
     token = bottle.request.forms['token']
-    assert token == SLACK_TEAM_TOKEN
+    if token != SLACK_TEAM_TOKEN:
+        bottle.abort(403, "slack token invalid")
 
     trigger_word = bottle.request.forms['trigger_word']
     text = bottle.request.forms['text']
     term = text.replace(trigger_word, "")
 
     sounds = _sounds_like(term)
-    return first(r._asdict() for r in sounds) or {}
+    response = first(r._asdict() for r in sounds) or None
+
+    if response:
+        return SlackResult(response['url'])._asdict()
+    else:
+        return SlackResult("")._asdict()
 
 
 @bottle.get("/api/v1/random/sound/redirect")
