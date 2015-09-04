@@ -10,7 +10,7 @@
     - name: Deploy sounds.so backend
       docker:
         name: sounds-so-backend
-        image: matlockx/sounds-so-backend
+        image: soundsso/sounds-so-backend
 
         state: reloaded
         pull: always
@@ -22,3 +22,4 @@
 
         env:
           FREESOUND_API_TOKEN: "{{ sso_freesound_api_token }}"
+          SLACK_TEAM_TOKEN: "{{ sso_slack_team_token }}"
