@@ -9,7 +9,7 @@ import requests
 
 # http://www.freesound.org/apiv2/search/text/?query=tiger&filter=duration:[3%20TO%2010]&fields=previews,images,license
 
-SearchResult = namedtuple("SearchResult", ["url", "image"])
+SearchResult = namedtuple("SearchResult", ["id", "name", "tags", "desc", "url", "image"])
 
 FREESOUND_API_TOKEN = os.getenv("FREESOUND_API_TOKEN")
 assert FREESOUND_API_TOKEN
@@ -29,14 +29,18 @@ def freesound_search(term):
     response = requests.get(FREESOUND_SEARCH_ENDPOINT, params={
         "query": term,
         "filter": 'duration:[3 TO 10] license:"Creative Commons 0"',
-        "fields": "previews,images,license",
+        "fields": "id,name,tags,description,previews,images,license",
         "token": FREESOUND_API_TOKEN
     })
 
     for result in response.json()['results']:
+        id = result['id']
+        name = result['name']
+        tags = result['tags']
+        desc = result['description']
         url = result['previews']['preview-hq-mp3']
         image = result['images']['waveform_l']
-        yield SearchResult(url, image)
+        yield SearchResult(id, name, tags, desc, url, image)
 
 
 def _sounds_like(term):
