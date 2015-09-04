@@ -3,6 +3,10 @@
   vars_files:
     - api-keys.yml
   tasks:
+
+    - name: Install docker
+      yum: name=docker-io
+
     - name: Install pip
       yum: name=python-pip
 

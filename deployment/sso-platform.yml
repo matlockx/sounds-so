@@ -1,0 +1,2 @@
+- include: sso-backend.yml
+- include: sso-frontend.yml

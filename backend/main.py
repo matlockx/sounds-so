@@ -6,9 +6,6 @@ import bottle
 from first import first
 import requests
 
-
-# http://www.freesound.org/apiv2/search/text/?query=tiger&filter=duration:[3%20TO%2010]&fields=previews,images,license
-
 SearchResult = namedtuple("SearchResult", ["id", "name", "tags", "desc", "url", "image"])
 SlackResult = namedtuple("SlackResult", ["text", "channel"])
 
@@ -73,8 +70,6 @@ def freesound_search(term):
 # noinspection PyProtectedMember
 @bottle.get("/api/v1/random/sound")
 def sounds_like():
-    bottle.response.set_header("Access-Control-Allow-Origin", "*")
-
     sounds = shuffled(freesound_search(bottle.request.params.get('like', '')))
     return first(r._asdict() for r in sounds) or {}
 
