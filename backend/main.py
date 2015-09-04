@@ -1,16 +1,17 @@
 from collections import namedtuple
+import os
 import random
+
 import bottle
 import requests
-import json
-from attrdict import AttrDict as attrdict
+
 
 # http://www.freesound.org/apiv2/search/text/?query=tiger&filter=duration:[3%20TO%2010]&fields=previews,images,license
 
 SearchResult = namedtuple("SearchResult", ["url", "image"])
 
-with open('freesound_credentials.json') as fp:
-    FREESOUND_CREDENTIALS = attrdict(json.load(fp))
+FREESOUND_API_TOKEN = os.getenv("FREESOUND_API_TOKEN")
+assert FREESOUND_API_TOKEN
 
 FREESOUND_SEARCH_ENDPOINT = "http://www.freesound.org/apiv2/search/text/"
 
@@ -27,7 +28,7 @@ def freesound_search(term):
         "query": term,
         "filter": 'duration:[3 TO 10] license:"Creative Commons 0"',
         "fields": "previews,images,license",
-        "token": FREESOUND_CREDENTIALS.secret
+        "token": FREESOUND_API_TOKEN
     })
 
     for result in response.json()['results']:
