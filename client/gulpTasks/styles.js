@@ -10,8 +10,7 @@ module.exports = function (gulp, plugins) {
             .pipe(gulp.dest('dist/css'))
             .pipe(plugins.rename({ suffix: '.min' }))
             .pipe(plugins.minifyCss())
-            .pipe(gulp.dest('dist/css'))
-            .pipe(plugins.notify({ message: 'Styles task completed' }));
+            .pipe(gulp.dest('dist/css'));
     };
 
 };
