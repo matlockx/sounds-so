@@ -1,10 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-ng-app="app">
 <head>
     <meta charset="UTF-8">
     <title>sound-so</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />
+
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
+
 </head>
 <body>
-Hello World!
+
+    <nav class="navbar navbar-default navbar-static-top">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+                Sounds-so
+            </a>
+        </div>
+    </nav>
+
+    <div class="container" data-ng-view></div>
+
+    <script src="../bower_components/angular/angular.js"></script>
+    <script src="../bower_components/angular-route/angular-route.js"></script>
+    <script src="../bower_components/angular-resource/angular-resource.js"></script>
+    <script src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="../bower_components/howler/howler.js"></script>
+
+    <script src="../dist/js/main.js"></script>
+
 </body>
 </html>
