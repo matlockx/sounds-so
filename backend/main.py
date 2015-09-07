@@ -33,7 +33,7 @@ def soundcloud_search(term):
         "q": term
     })
 
-    result = []
+    results = []
     for result in response.json():
         id = result['id']
         name = result['title']
@@ -41,9 +41,9 @@ def soundcloud_search(term):
         desc = result['description']
         url = result['permalink_url']
         image = result['waveform_url']
-        result.append(SearchResult(id, name, tags, desc, url, image))
+        results.append(SearchResult(id, name, tags, desc, url, image))
 
-    return result
+    return results
 
 
 @functools.lru_cache()
@@ -63,7 +63,7 @@ def freesound_search(term):
         "token": FREESOUND_API_TOKEN
     })
 
-    result = []
+    results = []
     for result in response.json()['results']:
         id = result['id']
         name = result['name']
@@ -71,9 +71,9 @@ def freesound_search(term):
         desc = result['description']
         url = result['previews']['preview-hq-mp3']
         image = result['images']['waveform_l']
-        result.append(SearchResult(id, name, tags, desc, url, image))
+        results.append(SearchResult(id, name, tags, desc, url, image))
 
-    return result
+    return results
 
 
 # noinspection PyProtectedMember
