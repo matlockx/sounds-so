@@ -1,20 +1,80 @@
-.sound {
-  &__image {
-    margin: 1em;
-    width: 100%;
 
-    // invert the image so it has black screen
-    -webkit-filter: invert(100%) grayscale(100%) contrast(500%) opacity(30%);
-    -moz-filter: invert(100%) grayscale(100%) contrast(500%) opacity(30%);
-    filter: invert(100%) grayscale(100%) contrast(500%) opacity(30%);
+$highlight-color: #690;
+$error-color: #930;
+$busy-color: #696;
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body, input {
+  font-family: "Roboto", sans-serif;
+}
+
+.search {
+  position: absolute;
+  font-size: 19vw;
+  line-height: normal;
+
+  top: 40%;
+  margin-top: -20vw;
+  height: 40vw;
+
+  > * {
+      display: inline-block;
+      vertical-align: baseline;
   }
 
-  &__controls {
-    margin: 1em;
+  &__term, &__ghost {
+    border: 0 none;
+    color: $highlight-color;
+    white-space: pre;
+    padding: 0;
+    margin: 0;
+    font-size: 1em;
+    outline: 0;
+
+    max-width: 100vw;
+
+    &--no_result {
+      color: $error-color;
+    }
+
+    &--searching {
+      color: $busy-color;
+    }
+
+    transition: color 0.5s;
+  }
+
+  &__term:hover {
+    background: #eee;
+  }
+
+  &__ghost {
+    display: none;
+    white-space: pre;
+  }
+
+  &__text {
+    color: #555;
+  }
+
+  &__dot {
+    color: $highlight-color;
   }
 }
 
-#search {
-  border: none;
-  background-color: transparent;
+.waveform {
+  position: fixed;
+  left: 0;
+  bottom: -10vh;
+  height: 30vh;
+  width: 100%;
+
+  // invert the image so it has a white background
+  -webkit-filter: invert(100%) grayscale(100%) contrast(5000%) opacity(66%);
+  -moz-filter: invert(100%) grayscale(100%) contrast(5000%) opacity(66%);
+  filter: invert(100%) grayscale(100%) contrast(5000%) opacity(66%);
 }

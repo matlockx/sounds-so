@@ -1,19 +1,17 @@
 (function() {
   'use strict';
 
-    angular.module('utils.autofocus', []).directive('autofocus', ['$timeout',
-      function ($timeout) {
-        return {
-          restrict: 'A',
-          link: function ($scope, $element) {
-            $timeout(function () {
-              $element[0].focus();
-            });
-          }
-        };
-      }
-    ]);
+    var app = angular.module('app', ['ngRoute', 'ngResource']);
 
-  angular.module('app', ['ngRoute', 'ngResource', 'ui.bootstrap']);
-
+    app.directive('autofocus', ['$timeout',function ($timeout) {
+      return {
+        restrict: 'A',
+        link: function ($scope, $element) {
+          $timeout(function () {
+            $element[0].focus();
+          });
+        }
+      };
+    }
+  ]);
 })();

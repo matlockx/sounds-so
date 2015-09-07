@@ -1,35 +1,16 @@
-<div class="row">
-  <form class="col-xs-12">
-    <div class="input-group">
-      <input type="text" class="form-control" placeholder="Sound..." data-ng-model="search" autofocus>
-      <span class="input-group-addon">
-        <button id="search" type="submit" class="glyphicon glyphicon-search" data-ng-click="searchSound()"></button>
-      </span>
-    </div>
-  </form>
-</div>
-<div class="row">
-  <div class="col-xs-12">
-    <div class="thumbnail" data-ng-if="sound">
-      <!--
-      <div class="caption">
-        <h3 class="text-center">{{ sound.name }}</h3>
-      </div>
-      -->
+<img class="waveform" ng-if="sound" src="{{ sound.image }}" ng-click="stop()">
 
-      <img class="sound__image" data-ng-src="{{ sound.image }}"/>
+<form class="search" ng-submit="searchSound()">
+  <input id="searchTerm" class="search__term" placeholder="anything" autofocus
+    ng-model="search" ng-trim="false" ng-class="{
+      'search__term--no_result': noResult,
+      'search__term--searching': searching
+    }"
+    style="width: {{ searchTermWidth }}px;"><!--
 
-      <div class="text-center sound__controls">
-        <button class="btn btn-primary" type="button" data-ng-click="stop()">
-          <i class="glyphicon glyphicon-stop"></i>
-        </button>
-      </div>
-    </div>
-    <div data-ng-if="noResult">
-      Nothing found.
-    </div>
-    <div data-ng-if="searching">
-      Searching...
-    </div>
-  </div>
-</div>
+  --><span id="searchGhost" class="search__ghost"></span><!--
+  --><span class="search__dot">.</span><!--
+  --><span class="search__text">sounds</span><!--
+  --><span class="search__dot">.</span><!--
+  --><span class="search__text">so</span>
+</form>
