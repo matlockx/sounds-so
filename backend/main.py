@@ -27,7 +27,7 @@ def shuffled(values):
     return values
 
 
-@functools.lru_cache(size=1024)
+@functools.lru_cache()
 def soundcloud_search(term):
     response = requests.get(SOUNDCLOUD_ENDPOINT, params={
         "q": term
