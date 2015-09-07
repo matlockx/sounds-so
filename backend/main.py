@@ -1,7 +1,7 @@
 from collections import namedtuple
 import os
 import random
-
+import functools
 import bottle
 from first import first
 import requests
@@ -27,10 +27,13 @@ def shuffled(values):
     return values
 
 
+@functools.lru_cache(size=1024)
 def soundcloud_search(term):
     response = requests.get(SOUNDCLOUD_ENDPOINT, params={
         "q": term
     })
+
+    result = []
     for result in response.json():
         id = result['id']
         name = result['title']
@@ -38,7 +41,9 @@ def soundcloud_search(term):
         desc = result['description']
         url = result['permalink_url']
         image = result['waveform_url']
-        yield SearchResult(id, name, tags, desc, url, image)
+        result.append(SearchResult(id, name, tags, desc, url, image))
+
+    return result
 
 
 def freesound_search(term):
