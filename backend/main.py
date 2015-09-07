@@ -46,6 +46,7 @@ def soundcloud_search(term):
     return result
 
 
+@functools.lru_cache()
 def freesound_search(term):
     """Queries freesound.org by using the following filter criteria by default:
         - license: free
@@ -62,6 +63,7 @@ def freesound_search(term):
         "token": FREESOUND_API_TOKEN
     })
 
+    result = []
     for result in response.json()['results']:
         id = result['id']
         name = result['name']
@@ -69,7 +71,9 @@ def freesound_search(term):
         desc = result['description']
         url = result['previews']['preview-hq-mp3']
         image = result['images']['waveform_l']
-        yield SearchResult(id, name, tags, desc, url, image)
+        result.append(SearchResult(id, name, tags, desc, url, image))
+
+    return result
 
 
 # noinspection PyProtectedMember
