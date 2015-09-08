@@ -1,6 +1,7 @@
 import io
 
 from collections import namedtuple
+from urllib.parse import urljoin
 from gtts import gTTS
 import os
 import random
@@ -80,7 +81,7 @@ def freesound_search(term):
 
 
 def gtts_sound(term):
-    return [SearchResult(1, "gtts sound", [], "gtts generated", "/api/v1/gtts/" + term, None)]
+    return [SearchResult(1, "gtts sound", [], "gtts generated", urljoin(bottle.request.url, "/api/v1/gtts/" + term), None)]
 
 
 # noinspection PyProtectedMember
@@ -101,7 +102,7 @@ def sounds_like():
     term = bottle.request.forms['text']
 
     channel = bottle.request.forms['channel_id']
-    freesounds = first(shuffled(freesound_search(term)))
+    freesounds = first(shuffled(freesound_search(term))) or gtts_sound(term)
     soundcloud = first(shuffled(soundcloud_search(term)))
 
     if freesounds or soundcloud:
