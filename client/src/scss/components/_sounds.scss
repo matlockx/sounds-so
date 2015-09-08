@@ -26,7 +26,7 @@ body, input {
       vertical-align: baseline;
   }
 
-  &__term, &__ghost {
+  &__term {
     border: 0 none;
     color: $highlight-color;
     white-space: pre;
@@ -34,8 +34,9 @@ body, input {
     margin: 0;
     font-size: 1em;
     outline: 0;
+    background: none;
 
-    max-width: 100vw;
+    width: 100vw;
 
     &--no_result {
       color: $error-color;
@@ -48,15 +49,6 @@ body, input {
     transition: color 0.5s;
   }
 
-  &__term:hover {
-    background: #eee;
-  }
-
-  &__ghost {
-    display: none;
-    white-space: pre;
-  }
-
   &__text {
     color: #555;
   }
@@ -67,14 +59,14 @@ body, input {
 }
 
 .waveform {
-  position: fixed;
+  position: absolute;
+  top: 0;
   left: 0;
-  bottom: -10vh;
-  height: 30vh;
-  width: 100%;
+  width: 100vw;
+  height :100vh;
 
   // invert the image so it has a white background
-  -webkit-filter: invert(100%) grayscale(100%) contrast(5000%) opacity(66%);
-  -moz-filter: invert(100%) grayscale(100%) contrast(5000%) opacity(66%);
-  filter: invert(100%) grayscale(100%) contrast(5000%) opacity(66%);
+  -webkit-filter: invert(100%) grayscale(100%) contrast(5000%) opacity(30%) blur(5px);
+  -moz-filter: invert(100%) grayscale(100%) contrast(5000%) opacity(30%) blur(5px);
+  filter: invert(100%) grayscale(100%) contrast(5000%) opacity(30%) blur(5px);
 }

@@ -5,7 +5,6 @@
     $scope.sound = null;
     $scope.howl = null;
     $scope.searching = false;
-    $scope.searchTermWidth = 0;
 
     function playSound(sound) {
       $scope.stop();
@@ -33,19 +32,6 @@
       });
     }
 
-    function measureText(text) {
-      return jQuery("#searchGhost").text(text).width();
-    }
-
-    function onSearchTermChanged() {
-      if($scope.search == "") {
-        $scope.search = "";
-        $scope.searchTermWidth = measureText("anything");
-      } else {
-        $scope.searchTermWidth = measureText($scope.search);
-      }
-    }
-
     $scope.$on('$destroy', function () {
       $scope.stop();
     });
@@ -66,21 +52,9 @@
       }
     };
 
-    $scope.$watch("search", onSearchTermChanged);
-
-    jQuery(window).resize(function() {
-      onSearchTermChanged();
-      $scope.$apply();
-    });
-
     // start a search if we have a query.
     if($scope.search && $scope.search !== "") {
       performSearch();
     }
-
-    window.setTimeout(function() {
-      onSearchTermChanged();
-      $scope.$apply();
-    }, 500);
   }]);
 })();
