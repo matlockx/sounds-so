@@ -1,4 +1,7 @@
+import io
+
 from collections import namedtuple
+from gtts import gTTS
 import os
 import random
 import functools
@@ -64,7 +67,7 @@ def freesound_search(term):
     })
 
     results = []
-    for result in response.json()['results']:
+    for result in response.json().get('results', ()):
         id = result['id']
         name = result['name']
         tags = result['tags']
@@ -76,10 +79,15 @@ def freesound_search(term):
     return results
 
 
+def gtts_sound(term):
+    return [SearchResult(1, "gtts sound", [], "gtts generated", "/api/v1/gtts/" + term, None)]
+
+
 # noinspection PyProtectedMember
 @bottle.get("/api/v1/random/sound")
 def sounds_like():
-    sounds = shuffled(freesound_search(bottle.request.params.get('like', '')))
+    term = bottle.request.params.get('like', '')
+    sounds = shuffled(freesound_search(term) or gtts_sound(term))
     return first(r._asdict() for r in sounds) or {}
 
 
@@ -127,3 +135,18 @@ def sounds_like():
 def sounds_like_redirect():
     response = shuffled(freesound_search(bottle.request.params.get('like', '')))
     bottle.redirect(first(r.url for r in response) or bottle.abort(404))
+
+
+@bottle.get("/api/v1/gtts/<term:path>")
+def gtts(term):
+    data = gtts_get_mp3(term)
+    bottle.response.content_type = "audio/mpeg"
+    return data
+
+
+@functools.lru_cache()
+def gtts_get_mp3(term):
+    gtts = gTTS(text=term, lang="en")
+    fp = io.BytesIO()
+    gtts.write_to_fp(fp)
+    return fp.getvalue()
