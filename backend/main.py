@@ -16,6 +16,7 @@ SlackResult = namedtuple("SlackResult", ["text", "channel"])
 FREESOUND_API_TOKEN = os.getenv("FREESOUND_API_TOKEN")
 SLACK_TEAM_TOKEN = os.getenv("SLACK_TEAM_TOKEN")
 SLACK_INCOMING_WEBHOOK_URL = os.getenv("SLACK_INCOMING_WEBHOOK_URL")
+SOUNDS_SO_BASE_URI = os.getenv("SOUNDS_SO_BASE_URI")
 
 assert FREESOUND_API_TOKEN
 assert SLACK_TEAM_TOKEN
@@ -81,7 +82,7 @@ def freesound_search(term):
 
 
 def gtts_sound(term):
-    return [SearchResult(1, "gtts sound", [], "gtts generated", urljoin(bottle.request.url, "/api/v1/gtts/" + term), None)]
+    return [SearchResult(1, "gtts sound", [], "gtts generated", urljoin(SOUNDS_SO_BASE_URI or bottle.request.url, "/api/v1/gtts/" + term), None)]
 
 
 # noinspection PyProtectedMember

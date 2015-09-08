@@ -30,3 +30,4 @@
           FREESOUND_API_TOKEN: "{{ sso_backend_freesound_api_token }}"
           SLACK_TEAM_TOKEN: "{{ sso_backend_slack_team_token }}"
           SLACK_INCOMING_WEBHOOK_URL: "{{ sso_backend_slack_incoming_webhook_url }}"
+          SOUNDS_SO_BASE_URI: "http://sounds.so/"
