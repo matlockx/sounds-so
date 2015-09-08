@@ -12,7 +12,8 @@
       $scope.howl = new Howl({
         urls: [sound.url],
         autoplay: true,
-        loop: true
+        loop: true,
+        format: "mp3"
       });
     }
 
