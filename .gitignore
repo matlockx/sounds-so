@@ -62,3 +62,4 @@ sounds-so.iml
 # frontend
 client/node_modules
 client/bower_components
+vars.sh

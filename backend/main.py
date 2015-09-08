@@ -141,14 +141,16 @@ def sounds_like_redirect():
 
 @bottle.get("/api/v1/gtts/<term:path>")
 def gtts(term):
-    data = gtts_get_mp3(term)
+    lang = bottle.request.params.get("lang", "en")
+    data = gtts_get_mp3(term, lang)
     bottle.response.content_type = "audio/mpeg"
     return data
 
 
 @functools.lru_cache()
-def gtts_get_mp3(term):
-    gtts = gTTS(text=term, lang="en")
+def gtts_get_mp3(term, lang):
+    lang = lang.lower() if lang.lower() in gTTS.LANGUAGES else "en"
+    tts = gTTS(text=term, lang=lang)
     fp = io.BytesIO()
-    gtts.write_to_fp(fp)
+    tts.write_to_fp(fp)
     return fp.getvalue()
