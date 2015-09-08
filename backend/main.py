@@ -103,7 +103,7 @@ def sounds_like():
     term = bottle.request.forms['text']
 
     channel = bottle.request.forms['channel_id']
-    freesounds = first(shuffled(freesound_search(term))) or gtts_sound(term)
+    freesounds = first(shuffled(freesound_search(term)) or gtts_sound(term))
     soundcloud = first(shuffled(soundcloud_search(term)))
 
     if freesounds or soundcloud:
