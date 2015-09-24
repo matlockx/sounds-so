@@ -9,6 +9,7 @@ import functools
 import bottle
 from first import first
 import requests
+import datadog
 
 SearchResult = namedtuple("SearchResult", ["id", "name", "tags", "desc", "url", "image"])
 SlackResult = namedtuple("SlackResult", ["text", "channel"])
@@ -25,6 +26,9 @@ assert SLACK_INCOMING_WEBHOOK_URL
 FREESOUND_SEARCH_ENDPOINT = "http://www.freesound.org/apiv2/search/text/"
 SOUNDCLOUD_ENDPOINT = "http://api.soundcloud.com/tracks"
 
+datadog.initialize()
+stats = datadog.ThreadStats()
+stats.start()
 
 def shuffled(values):
     values = list(values)
@@ -87,6 +91,7 @@ def gtts_sound(term):
 
 # noinspection PyProtectedMember
 @bottle.get("/api/v1/random/sound")
+@stats.timed("request.random.sound")
 def sounds_like():
     term = bottle.request.params.get('like', '')
     sounds = shuffled(freesound_search(term) or gtts_sound(term))
@@ -95,6 +100,7 @@ def sounds_like():
 
 # noinspection PyProtectedMember
 @bottle.post("/api/v1/slack/webhook")
+@stats.timed("request.slack.webhook")
 def sounds_like():
     token = bottle.request.forms['token']
     if token != SLACK_TEAM_TOKEN:
@@ -134,12 +140,14 @@ def sounds_like():
 
 
 @bottle.get("/api/v1/random/sound/redirect")
+@stats.timed("request.random.sound.redirect")
 def sounds_like_redirect():
     response = shuffled(freesound_search(bottle.request.params.get('like', '')))
     bottle.redirect(first(r.url for r in response) or bottle.abort(404))
 
 
 @bottle.get("/api/v1/gtts/<term:path>")
+@stats.timed("request.gtts")
 def gtts(term):
     lang = bottle.request.params.get("lang", "en")
     data = gtts_get_mp3(term, lang)

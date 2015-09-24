@@ -31,3 +31,4 @@
           SLACK_TEAM_TOKEN: "{{ sso_backend_slack_team_token }}"
           SLACK_INCOMING_WEBHOOK_URL: "{{ sso_backend_slack_incoming_webhook_url }}"
           SOUNDS_SO_BASE_URI: "http://sounds.so/"
+          DATADOG_API_KEY: "{{ sso_datadog_api_key }}"
